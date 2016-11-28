@@ -31,6 +31,8 @@ public class MCStatusChecker extends NanoHTTPD {
 
 	public static HashMap<String, ServerInfo> info = new HashMap<>();
 	public static String otherServerLinks = "";
+	
+	public static long viewCount = 0;
 
 	public MCStatusChecker() throws IOException {
 		super(8080);
@@ -40,9 +42,9 @@ public class MCStatusChecker extends NanoHTTPD {
 
 	public static void main(String[] args) throws IOException {
 		info.put("9b9t.com", new MCStatusChecker.ServerInfo());
-		new Timer().scheduleAtFixedRate(new MCStatusChecker.UpdateStatus("9b9t.com"), 1, 600000); //10 mins
+		new Timer().scheduleAtFixedRate(new MCStatusChecker.UpdateStatus("9b9t.com"), 1, 10000); //10 mins
 		info.put("2b2t.org", new MCStatusChecker.ServerInfo());
-		new Timer().scheduleAtFixedRate(new MCStatusChecker.UpdateStatus("2b2t.org"), 1, 600000); //10 mins
+		new Timer().scheduleAtFixedRate(new MCStatusChecker.UpdateStatus("2b2t.org"), 1, 10000); //10 mins
 		for (String s : info.keySet())	{
 			otherServerLinks += "<a href=\"http://www.daporkchop.tk/servertracker/?serveraddress=" + s + "\" target=\"_top\">" + s + "</a><p></p>";
 		}
@@ -85,6 +87,7 @@ public class MCStatusChecker extends NanoHTTPD {
 				msg = msg.replaceAll("INSNAME", serverName);
 				msg = msg.replace("INSSERVERS", otherServerLinks);
 			}
+			System.out.println("Pageview #" + ++viewCount);
 			return newFixedLengthResponse(msg);
 		case "/ad.html":
 			return newFixedLengthResponse(
@@ -98,6 +101,7 @@ public class MCStatusChecker extends NanoHTTPD {
 		public UpdateStatus (String url)	{
 			this.url = url;
 		}
+		private int writeCount = 0;
 		@Override
 		public void run() {
 			try {
@@ -108,8 +112,12 @@ public class MCStatusChecker extends NanoHTTPD {
 					MCStatusChecker.info.get(url).onlinePlayers.remove(0);
 				}
 				MCStatusChecker.info.get(url).graph = genGraph();
-			    Files.write(Paths.get(url + ".txt"), (System.currentTimeMillis() + " " + MCStatusChecker.info.get(url).status.getPlayers().getOnline() + " " + MCStatusChecker.info.get(url).status.getPlayers().getMax() + "\n").getBytes(), StandardOpenOption.APPEND);
-				System.out.println("Pinged " + url);
+				if (writeCount == 0)	{
+					writeCount = 60;
+					Files.write(Paths.get(url + ".txt"), (System.currentTimeMillis() + " " + MCStatusChecker.info.get(url).status.getPlayers().getOnline() + " " + MCStatusChecker.info.get(url).status.getPlayers().getMax() + "\n").getBytes(), StandardOpenOption.APPEND);
+				} else {
+					writeCount--;
+				}
 			} catch (IOException e) {
 				MCStatusChecker.info.get(url).status = null;
 				MCStatusChecker.info.get(url).favicon = Favicons.fallback;
@@ -119,8 +127,13 @@ public class MCStatusChecker extends NanoHTTPD {
 				}
 				MCStatusChecker.info.get(url).graph = genGraph();
 			    try {
-					Files.write(Paths.get(url + ".txt"), (System.currentTimeMillis() + " 0 0 OFFLINE\n").getBytes(), StandardOpenOption.APPEND);
-				} catch (IOException e1) {}
+			    	if (writeCount == 0)	{
+						writeCount = 60;
+						Files.write(Paths.get(url + ".txt"), (System.currentTimeMillis() + " " + MCStatusChecker.info.get(url).status.getPlayers().getOnline() + " " + MCStatusChecker.info.get(url).status.getPlayers().getMax() + "\n").getBytes(), StandardOpenOption.APPEND);
+					} else {
+						writeCount--;
+					}
+			    } catch (IOException e1) {}
 			}
 		}
 		public String genGraph()	{
