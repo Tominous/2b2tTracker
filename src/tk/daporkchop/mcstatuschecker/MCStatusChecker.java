@@ -88,7 +88,7 @@ public class MCStatusChecker extends NanoHTTPD {
 				msg = msg.replace("INSSERVERS", otherServerLinks);
 			}
 			if (++viewCount % 2 == 0)	{
-				System.out.println("Pageview #" + viewCount);
+				System.out.println("Pageview #" + (viewCount / 2));
 			}
 			return newFixedLengthResponse(msg);
 		case "/ad.html":
