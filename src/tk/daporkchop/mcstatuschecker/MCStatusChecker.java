@@ -129,7 +129,7 @@ public class MCStatusChecker extends NanoHTTPD {
 			    try {
 			    	if (writeCount == 0)	{
 						writeCount = 60;
-						Files.write(Paths.get(url + ".txt"), (System.currentTimeMillis() + " " + MCStatusChecker.info.get(url).status.getPlayers().getOnline() + " " + MCStatusChecker.info.get(url).status.getPlayers().getMax() + "\n").getBytes(), StandardOpenOption.APPEND);
+						Files.write(Paths.get(url + ".txt"), (System.currentTimeMillis() + " 0 0 OFFLINE\n").getBytes(), StandardOpenOption.APPEND);
 					} else {
 						writeCount--;
 					}
