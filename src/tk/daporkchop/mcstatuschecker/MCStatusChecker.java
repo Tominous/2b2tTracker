@@ -44,7 +44,7 @@ public class MCStatusChecker extends NanoHTTPD {
 		info.put("2b2t.org", new MCStatusChecker.ServerInfo());
 		new Timer().scheduleAtFixedRate(new MCStatusChecker.UpdateStatus("2b2t.org"), 1, 600000); //10 mins
 		for (String s : info.keySet())	{
-			otherServerLinks += "<a href=\"http://servertracker.daporkchop.tk/?serveraddress=" + s + "\">" + s + "</a><p></p>";
+			otherServerLinks += "<a href=\"http://www.daporkchop.tk/servertracker/?serveraddress=" + s + "\" target=\"_top\">" + s + "</a><p></p>";
 		}
 		try {
 			new MCStatusChecker();
