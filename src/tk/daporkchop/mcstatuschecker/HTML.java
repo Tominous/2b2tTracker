@@ -18,9 +18,10 @@ public final class HTML {
 			+ "</div></div>"
 			+ "<img src=\"data:image/png;base64,INSGRAPH\"></img>"
 			+ "<p></p>"
-			+ "<h3>Other servers I'm tracking:</h3>"
+			+ "<h3>Servers I'm tracking:</h3>"
 			+ "INSSERVERS<p></p>"
 			+ "<p>This is still very much WIP. Send me features <a href=\"https://github.com/DaMatrix/2b2tTracker/issues\">here</a> and I'll do my best to implement them!</p>"
+			+ "<p>Note: The graph sometimes appears to be missing data if the webserver has just been started.</p>"
 			+ "<iframe src=\"http://www.daporkchop.tk/toembed/adrefresh.html\" scrolling='no' style='width:740px; height:105px; border:0px; padding:0;overflow:hidden' allowtransparency='true' frameborder='0'></iframe></body></html>\n";
 	public static final String indexOffline = "<html><head>"
 			+ "<link type=\"text/css\" rel=\"stylesheet\" href=\"http://www.daporkchop.tk/stylesheet.css\"/>"
@@ -36,5 +37,6 @@ public final class HTML {
 			+ "<h3>Servers I'm tracking:</h3>"
 			+ "INSSERVERS<p></p>"
 			+ "<p>This is still very much WIP. Send me features <a href=\"https://github.com/DaMatrix/2b2tTracker/issues\">here</a> and I'll do my best to implement them!</p>"
+			+ "<p>Note: The graph sometimes appears to be missing data if the webserver has just been started.</p>"
 			+ "<iframe src=\"http://www.daporkchop.tk/toembed/adrefresh.html\" scrolling='no' style='width:740px; height:105px; border:0px; padding:0;overflow:hidden' allowtransparency='true' frameborder='0'></iframe></body></html>\n";
 }
