@@ -87,7 +87,9 @@ public class MCStatusChecker extends NanoHTTPD {
 				msg = msg.replaceAll("INSNAME", serverName);
 				msg = msg.replace("INSSERVERS", otherServerLinks);
 			}
-			System.out.println("Pageview #" + ++viewCount);
+			if (++viewCount % 2 == 0)	{
+				System.out.println("Pageview #" + viewCount);
+			}
 			return newFixedLengthResponse(msg);
 		case "/ad.html":
 			return newFixedLengthResponse(
@@ -107,13 +109,13 @@ public class MCStatusChecker extends NanoHTTPD {
 			try {
 				MCStatusChecker.info.get(url).status = new MinecraftPing().getPing(url);
 				MCStatusChecker.info.get(url).favicon = MCStatusChecker.info.get(url).status.getFavicon();
-				MCStatusChecker.info.get(url).onlinePlayers.add(MCStatusChecker.info.get(url).status.getPlayers().getOnline());
-				if (MCStatusChecker.info.get(url).onlinePlayers.size() > 144)	{
-					MCStatusChecker.info.get(url).onlinePlayers.remove(0);
-				}
-				MCStatusChecker.info.get(url).graph = genGraph();
 				if (writeCount == 0)	{
 					writeCount = 60;
+					MCStatusChecker.info.get(url).onlinePlayers.add(MCStatusChecker.info.get(url).status.getPlayers().getOnline());
+					if (MCStatusChecker.info.get(url).onlinePlayers.size() > 144)	{
+						MCStatusChecker.info.get(url).onlinePlayers.remove(0);
+					}
+					MCStatusChecker.info.get(url).graph = genGraph();
 					Files.write(Paths.get(url + ".txt"), (System.currentTimeMillis() + " " + MCStatusChecker.info.get(url).status.getPlayers().getOnline() + " " + MCStatusChecker.info.get(url).status.getPlayers().getMax() + "\n").getBytes(), StandardOpenOption.APPEND);
 				} else {
 					writeCount--;
@@ -121,14 +123,14 @@ public class MCStatusChecker extends NanoHTTPD {
 			} catch (IOException e) {
 				MCStatusChecker.info.get(url).status = null;
 				MCStatusChecker.info.get(url).favicon = Favicons.fallback;
-				MCStatusChecker.info.get(url).onlinePlayers.add(0);
-				if (MCStatusChecker.info.get(url).onlinePlayers.size() > 144)	{
-					MCStatusChecker.info.get(url).onlinePlayers.remove(0);
-				}
-				MCStatusChecker.info.get(url).graph = genGraph();
 			    try {
 			    	if (writeCount == 0)	{
 						writeCount = 60;
+						MCStatusChecker.info.get(url).onlinePlayers.add(0);
+						if (MCStatusChecker.info.get(url).onlinePlayers.size() > 144)	{
+							MCStatusChecker.info.get(url).onlinePlayers.remove(0);
+						}
+						MCStatusChecker.info.get(url).graph = genGraph();
 						Files.write(Paths.get(url + ".txt"), (System.currentTimeMillis() + " 0 0 OFFLINE\n").getBytes(), StandardOpenOption.APPEND);
 					} else {
 						writeCount--;
